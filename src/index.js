@@ -5,8 +5,56 @@ function eval() {
 
 function expressionCalculator(expr) {
     const exprWithoutSpace = expr.replace(/\s/g, '');
-    let result = calc(exprWithoutSpace);
+    let result = calcBrackets(exprWithoutSpace);
     return result;
+}
+
+function calcBrackets(exprWithoutSpace) {
+    let leftSubString = "";
+    let centrSubString = "";
+    let rightSubString = "";
+    let leftBracket = false;
+    let rightBracket = false;
+
+    if (!exprWithoutSpace.includes("(") && !exprWithoutSpace.includes(")")) {
+        return calc(exprWithoutSpace);
+    }
+
+    for (let i = 0; i < exprWithoutSpace.length; i++) {
+        let simvol = exprWithoutSpace.substring(i, i + 1);
+        if (simvol=="(") {
+            if(leftBracket){
+                leftSubString+="("+centrSubString;
+                centrSubString = "";
+            }
+            leftBracket = true;
+            continue;
+        }
+        if (simvol==")") {
+            if (leftBracket) {
+                rightBracket = true;
+                continue;
+            } else {
+                throw new Error("ExpressionError: Brackets must be paired");
+            }
+        }
+        if (leftBracket && !rightBracket) {
+            centrSubString += simvol;
+            continue;
+        }
+        if (!leftBracket) {
+            leftSubString += simvol;
+            continue;
+        }
+        if (rightBracket) {
+            rightSubString += simvol;
+        }
+    }
+    if(leftBracket && !rightBracket){
+        throw new Error("ExpressionError: Brackets must be paired");
+    }
+
+    return calcBrackets(leftSubString + calc(centrSubString) + rightSubString);
 }
 
 function calc(exprWithoutSpace){
