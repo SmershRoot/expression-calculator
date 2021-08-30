@@ -22,7 +22,7 @@ function calcBrackets(exprWithoutSpace) {
 
     for (let i = 0; i < exprWithoutSpace.length; i++) {
         let simvol = exprWithoutSpace.substring(i, i + 1);
-        if (simvol=="(") {
+        if (simvol=="(" && !rightBracket) {
             if(leftBracket){
                 leftSubString+="("+centrSubString;
                 centrSubString = "";
@@ -30,7 +30,7 @@ function calcBrackets(exprWithoutSpace) {
             leftBracket = true;
             continue;
         }
-        if (simvol==")") {
+        if (simvol==")" && !rightBracket) {
             if (leftBracket) {
                 rightBracket = true;
                 continue;
@@ -58,6 +58,7 @@ function calcBrackets(exprWithoutSpace) {
 }
 
 function calc(exprWithoutSpace){
+    console.log(exprWithoutSpace);
     let result = "";
 
     let arrayNumbers = [];
@@ -85,6 +86,9 @@ function calc(exprWithoutSpace){
         } else {
             number += simvol;
             isStart = false;
+            if(simvol == "E" || simvol == "e"){
+                isStart = true;
+            }
         }
     }
 
